@@ -8,7 +8,7 @@ class Player:
         self.is_human=is_human
 
     def make_move(self, board):
-        raise NotImplementedError("Subclasses must implement this method.")
+        raise Exception("Subclasses must implement this method.")
 
 
 class Hooman(Player):
@@ -23,7 +23,7 @@ class Hooman(Player):
                     return move
                 else:
                     print("Invalid move. The cell is already occupied.")
-            except ValueError:
+            except:
                 print("Invalid input. Please enter a number between 1 and 9.")
 
 
