@@ -3,16 +3,17 @@ import random
 consumed_tiles=set()
 
 class Player:
-    def __init__(self, symbol):
+    def __init__(self, symbol, is_human):
         self.symbol = symbol
+        self.is_human=is_human
 
     def make_move(self, board):
         raise NotImplementedError("Subclasses must implement this method.")
 
 
-class Human(Player):
+class Hooman(Player):
     def __init__(self, symbol):
-        super().__init__(symbol)
+        super().__init__(symbol, True)
 
     def make_move(self, board):
         while True:
@@ -28,7 +29,7 @@ class Human(Player):
 
 class Comp(Player):
     def __init__(self, symbol):
-        super().__init__(symbol)
+        super().__init__(symbol, False)
 
     def make_move(self, board):
         available_moves = board.get_available_moves()
@@ -68,7 +69,7 @@ class TicTacToe:
             (0, 4, 8), (2, 4, 6)           
         ]
         for condition in win_conditions:
-            if self.board[condition[0]] == self.board[condition[1]] == self.board[condition[2]] != " ":
+            if self.board[condition[0]] == self.board[condition[1]] == self.board[condition[2]]:
                 return self.board[condition[0]]
         return None  
 
@@ -82,10 +83,16 @@ class TicTacToe:
             move = self.current_player.make_move(self)
             self.make_move(move, self.current_player.symbol)
 
-            winner = self.check_winner()
-            if winner:
+            winner_symbol = self.check_winner()
+            win_msg=None
+            if winner_symbol==player1.symbol:
+                win_msg= "You win!" if player1.is_human else "Computer wins!"
+            else: 
+                 win_msg= "You win!" if player2.is_human else "Computer wins!"
+
+            if winner_symbol:
                 self.display_board()
-                print(f"Player {winner} wins!")
+                print(win_msg)
                 self.is_game_over = True
                 break
 
@@ -103,13 +110,14 @@ def main():
     player_symbol = input("Choose your symbol (X or O): ").upper()
 
     while player_symbol not in ["X", "O"]:
-        player_symbol = input("Invalid symbol. Please choose X or O: ").upper()
+        player_symbol = input("Invalid symbol. Please choose X or O: ")
+        player_symbol=player_symbol.upper()
 
     if player_symbol == "X":
-        human = Human("X")
+        human = Hooman("X")
         computer = Comp("O")
     else:
-        human = Human("O")
+        human = Hooman("O")
         computer = Comp("X")
 
     game = TicTacToe()
